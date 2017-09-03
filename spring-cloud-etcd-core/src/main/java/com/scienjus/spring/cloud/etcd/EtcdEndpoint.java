@@ -2,6 +2,7 @@ package com.scienjus.spring.cloud.etcd;
 
 import com.coreos.jetcd.Client;
 import com.coreos.jetcd.maintenance.StatusResponse;
+import com.scienjus.spring.cloud.etcd.exception.EtcdOperationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.EtcdStatus> {
 
-  private Client etcdClient;
+  private final Client etcdClient;
 
   public EtcdEndpoint(Client etcdClient) {
     super("etcd", true, true);
@@ -44,7 +45,7 @@ public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.EtcdStatus> {
               ).collect(Collectors.toList());
       return new EtcdStatus(memberStatuses);
     } catch (InterruptedException | ExecutionException e) {
-      throw new IllegalStateException(e);
+      throw new EtcdOperationException(e);
     }
   }
 

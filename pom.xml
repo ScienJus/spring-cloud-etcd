@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>spring-cloud-etcd-core</module>
+        <module>spring-cloud-etcd-discovery</module>
     </modules>
 
     <properties>
@@ -20,6 +21,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.scienjus</groupId>
+                <artifactId>spring-cloud-etcd-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.coreos</groupId>
                 <artifactId>jetcd-core</artifactId>

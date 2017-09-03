@@ -1,6 +1,7 @@
 package com.scienjus.spring.cloud.etcd;
 
 import com.coreos.jetcd.Client;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -10,13 +11,10 @@ import org.springframework.boot.actuate.health.HealthIndicator;
  *
  * @author ScienJus
  */
+@AllArgsConstructor
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
 
-	private Client etcd;
-
-	public EtcdHealthIndicator(Client etcd) {
-		this.etcd = etcd;
-	}
+	private final Client etcdClient;
 
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
