@@ -3,6 +3,7 @@ package com.scienjus.spring.cloud.etcd.serviceregistry;
 import com.coreos.jetcd.Client;
 import com.scienjus.spring.cloud.etcd.ConditionalOnEtcdEnabled;
 import com.scienjus.spring.cloud.etcd.EtcdAutoConfiguration;
+import com.scienjus.spring.cloud.etcd.serviceregistry.properties.EtcdDiscoveryProperties;
 import com.scienjus.spring.cloud.etcd.serviceregistry.properties.HeartbeatProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,7 +27,7 @@ public class EtcdServiceRegistryAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public EtcdServiceRegistry etcdServiceRegistry(Client etcdClient, EtcdHeartbeatLease etcdHeartbeatLease) {
-    return new EtcdServiceRegistry(etcdClient, etcdHeartbeatLease);
+  public EtcdServiceRegistry etcdServiceRegistry(Client etcdClient, EtcdDiscoveryProperties properties, EtcdHeartbeatLease etcdHeartbeatLease) {
+    return new EtcdServiceRegistry(etcdClient, properties, etcdHeartbeatLease);
   }
 }

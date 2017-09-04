@@ -6,6 +6,7 @@ import com.coreos.jetcd.options.PutOption;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scienjus.spring.cloud.etcd.exception.EtcdOperationException;
+import com.scienjus.spring.cloud.etcd.serviceregistry.properties.EtcdDiscoveryProperties;
 import lombok.AllArgsConstructor;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 
@@ -20,13 +21,15 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 
   private final Client etcdClient;
 
+  private final EtcdDiscoveryProperties properties;
+
   private final EtcdHeartbeatLease lease;
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
   public void register(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey();
+    String etcdKey = registration.etcdKey(properties.getPrefix());
     try {
       long leaseId = lease.getLeaseId();
       PutOption putOption = PutOption.newBuilder()
@@ -42,7 +45,7 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 
   @Override
   public void deregister(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey();
+    String etcdKey = registration.etcdKey(properties.getPrefix());
     try {
       etcdClient.getKVClient()
               .delete(fromString(etcdKey))
@@ -70,7 +73,7 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 
   @Override
   public Object getStatus(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey();
+    String etcdKey = registration.etcdKey(properties.getPrefix());
     try {
       GetResponse response = etcdClient.getKVClient()
               .get(fromString(etcdKey))

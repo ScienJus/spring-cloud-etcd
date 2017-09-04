@@ -1,0 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.scienjus.spring.cloud.etcd.discovery.RibbonEtcdAutoConfiguration,\
+com.scienjus.spring.cloud.etcd.discovery.RibbonEtcdAutoConfiguration,\
+com.scienjus.spring.cloud.etcd.serviceregistry.EtcdServiceRegistryAutoConfiguration,\
+com.scienjus.spring.cloud.etcd.serviceregistry.EtcdAutoSerivceRegistrationAutoConfiguration
+
+org.springframework.cloud.client.discovery.EnableDiscoveryClient=\
+com.scienjus.spring.cloud.etcd.discovery.EtcdDiscoveryClientConfiguration

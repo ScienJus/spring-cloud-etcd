@@ -12,15 +12,16 @@ public class EtcdRegistration implements Registration {
 
   private String address;
 
-  private int port;
+  private Integer port;
 
   @Override
   public String getServiceId() {
     return serviceName;
   }
 
-  public String etcdKey() {
-    return String.format("/services/%s/%s:%d",
+  public String etcdKey(String prefix) {
+    return String.format("%s/%s/%s:%d",
+            prefix,
             this.getServiceName(),
             this.getAddress(),
             this.getPort());
