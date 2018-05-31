@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.boot.test.util.EnvironmentTestUtils.addEnvironment;
 
-public class EtcdAutoConfigurationTests {
+public class EtcdAutoConfigurationTest {
 
     private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
