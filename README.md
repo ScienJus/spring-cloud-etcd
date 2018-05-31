@@ -1,5 +1,8 @@
 # Spring Cloud Etcd
 
+[![Build Status](https://travis-ci.org/ScienJus/spring-cloud-etcd.svg?branch=master)](https://travis-ci.org/ScienJus/spring-cloud-etcd)
+[![Coverage Status](https://coveralls.io/repos/github/ScienJus/spring-cloud-etcd/badge.svg)](https://coveralls.io/github/ScienJus/spring-cloud-etcd)
+
 Etcd integration with Spring Cloud, based on etcd v3 api(jetcd).
 
 ## Feature
@@ -73,3 +76,4 @@ After server started up, check service-registry by etcdctl:
 ```
 
 Then you can use Feign Client like Spring Cloud Consul.
+
