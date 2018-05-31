@@ -2,3 +2,6 @@ language: java
 
 services:
   - docker
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report
