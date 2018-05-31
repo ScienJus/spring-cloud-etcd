@@ -22,32 +22,30 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(EtcdProperties.class)
 public class EtcdAutoConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean(Client.class)
-  public Client etcdClient(EtcdProperties properties) {
-    return Client.builder()
-            .endpoints(properties.getEndpoints())
-            .build();
-  }
-
-  @Configuration
-  @ConditionalOnClass(Endpoint.class)
-  protected static class EtcdHealthConfig {
-
     @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint("etcd")
-    public EtcdEndpoint etcdEndpoint(Client etcdClient) {
-      return new EtcdEndpoint(etcdClient);
+    @ConditionalOnMissingBean(Client.class)
+    public Client etcdClient(EtcdProperties properties) {
+        return Client.builder()
+                .endpoints(properties.getEndpoints())
+                .build();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnEnabledHealthIndicator("etcd")
-    public EtcdHealthIndicator etcdHealthIndicator(Client etcdClient) {
-      return new EtcdHealthIndicator(etcdClient);
+    @Configuration
+    @ConditionalOnClass(Endpoint.class)
+    protected static class EtcdHealthConfig {
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnEnabledEndpoint("etcd")
+        public EtcdEndpoint etcdEndpoint(Client etcdClient) {
+            return new EtcdEndpoint(etcdClient);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnEnabledHealthIndicator("etcd")
+        public EtcdHealthIndicator etcdHealthIndicator(Client etcdClient) {
+            return new EtcdHealthIndicator(etcdClient);
+        }
     }
-  }
-
-
 }

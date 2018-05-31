@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class App {
 
-  @Autowired
-  private HelloClient helloClient;
+    @Autowired
+    private HelloClient helloClient;
 
-  @GetMapping("hello")
-  public String hello() {
-    return "world";
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
 
-  @GetMapping("world")
-  public String world() {
-    return "hello " + helloClient.hello();
-  }
-
-  @FeignClient(name = "application")
-  interface HelloClient {
     @GetMapping("hello")
-    String hello();
-  }
+    public String hello() {
+        return "world";
+    }
 
-  public static void main(String[] args) {
-    SpringApplication.run(App.class, args);
-  }
+    @GetMapping("world")
+    public String world() {
+        return "hello " + helloClient.hello();
+    }
+
+    @FeignClient(name = "application")
+    interface HelloClient {
+        @GetMapping("hello")
+        String hello();
+    }
 }

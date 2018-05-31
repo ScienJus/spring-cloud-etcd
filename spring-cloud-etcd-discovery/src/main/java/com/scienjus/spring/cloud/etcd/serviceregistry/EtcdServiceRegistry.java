@@ -19,71 +19,71 @@ import static org.springframework.boot.actuate.health.Status.UP;
 @AllArgsConstructor
 public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
 
-  private final Client etcdClient;
+    private final Client etcdClient;
 
-  private final EtcdDiscoveryProperties properties;
+    private final EtcdDiscoveryProperties properties;
 
-  private final EtcdHeartbeatLease lease;
+    private final EtcdHeartbeatLease lease;
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @Override
-  public void register(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey(properties.getPrefix());
-    try {
-      long leaseId = lease.getLeaseId();
-      PutOption putOption = PutOption.newBuilder()
-              .withLeaseId(leaseId)
-              .build();
-      etcdClient.getKVClient()
-              .put(fromString(etcdKey), fromString(objectMapper.writeValueAsString(registration)), putOption)
-              .get();
-    } catch (JsonProcessingException | InterruptedException | ExecutionException e) {
-      throw new EtcdOperationException(e);
+    @Override
+    public void register(EtcdRegistration registration) {
+        String etcdKey = registration.etcdKey(properties.getPrefix());
+        try {
+            long leaseId = lease.getLeaseId();
+            PutOption putOption = PutOption.newBuilder()
+                    .withLeaseId(leaseId)
+                    .build();
+            etcdClient.getKVClient()
+                    .put(fromString(etcdKey), fromString(objectMapper.writeValueAsString(registration)), putOption)
+                    .get();
+        } catch (JsonProcessingException | InterruptedException | ExecutionException e) {
+            throw new EtcdOperationException(e);
+        }
     }
-  }
 
-  @Override
-  public void deregister(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey(properties.getPrefix());
-    try {
-      etcdClient.getKVClient()
-              .delete(fromString(etcdKey))
-              .get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new EtcdOperationException(e);
+    @Override
+    public void deregister(EtcdRegistration registration) {
+        String etcdKey = registration.etcdKey(properties.getPrefix());
+        try {
+            etcdClient.getKVClient()
+                    .delete(fromString(etcdKey))
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new EtcdOperationException(e);
+        }
     }
-  }
 
-  @Override
-  public void close() {
+    @Override
+    public void close() {
 
-  }
-
-  @Override
-  public void setStatus(EtcdRegistration registration, String status) {
-    if (status.equalsIgnoreCase(OUT_OF_SERVICE.getCode())) {
-      deregister(registration);
-    } else if (status.equalsIgnoreCase(UP.getCode())) {
-      register(registration);
-    } else {
-      throw new IllegalArgumentException("Unknown status: " + status);
     }
-  }
 
-  @Override
-  public Object getStatus(EtcdRegistration registration) {
-    String etcdKey = registration.etcdKey(properties.getPrefix());
-    try {
-      GetResponse response = etcdClient.getKVClient()
-              .get(fromString(etcdKey))
-              .get();
-      if (response.getKvs().isEmpty()) {
-        return OUT_OF_SERVICE.getCode();
-      }
-      return UP.getCode();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new EtcdOperationException(e);
+    @Override
+    public void setStatus(EtcdRegistration registration, String status) {
+        if (status.equalsIgnoreCase(OUT_OF_SERVICE.getCode())) {
+            deregister(registration);
+        } else if (status.equalsIgnoreCase(UP.getCode())) {
+            register(registration);
+        } else {
+            throw new IllegalArgumentException("Unknown status: " + status);
+        }
     }
-  }
+
+    @Override
+    public Object getStatus(EtcdRegistration registration) {
+        String etcdKey = registration.etcdKey(properties.getPrefix());
+        try {
+            GetResponse response = etcdClient.getKVClient()
+                    .get(fromString(etcdKey))
+                    .get();
+            if (response.getKvs().isEmpty()) {
+                return OUT_OF_SERVICE.getCode();
+            }
+            return UP.getCode();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new EtcdOperationException(e);
+        }
+    }
 }

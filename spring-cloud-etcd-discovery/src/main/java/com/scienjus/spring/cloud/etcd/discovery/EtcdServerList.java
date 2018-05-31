@@ -27,55 +27,55 @@ import static com.coreos.jetcd.data.ByteSequence.fromString;
 @AllArgsConstructor
 public class EtcdServerList extends AbstractServerList<EtcdServer> {
 
-  private final Client etcdClient;
+    private final Client etcdClient;
 
-  private final EtcdDiscoveryProperties properties;
+    private final EtcdDiscoveryProperties properties;
 
-  private String serviceId;
+    private String serviceId;
 
-  @Override
-  public void initWithNiwsConfig(IClientConfig iClientConfig) {
-    this.serviceId = iClientConfig.getClientName();
-  }
-
-  @Override
-  public List<EtcdServer> getInitialListOfServers() {
-    return getServers();
-  }
-
-  @Override
-  public List<EtcdServer> getUpdatedListOfServers() {
-    return getServers();
-  }
-
-  private List<EtcdServer> getServers() {
-    if (etcdClient == null) {
-      return Collections.emptyList();
+    @Override
+    public void initWithNiwsConfig(IClientConfig iClientConfig) {
+        this.serviceId = iClientConfig.getClientName();
     }
 
-    try {
-      String prefix = properties.getPrefix() + "/" + serviceId;
-      GetOption option = GetOption.newBuilder()
-              .withPrefix(fromString(prefix))
-              .withKeysOnly(true)
-              .build();
-
-      GetResponse response = etcdClient.getKVClient().get(fromString(prefix), option)
-              .get();
-
-      return response.getKvs().stream()
-              .map(KeyValue::getKey)
-              .map(ByteSequence::toStringUtf8)
-              .map(key -> {
-                String address = key.replace(prefix, "").substring(1);
-                String[] ipAndPort = address.split(":");
-                return new EtcdServer(serviceId, ipAndPort[0], Integer.parseInt(ipAndPort[1]));
-              })
-              .collect(Collectors.toList());
-    } catch (Exception e) {
-        log.warn("Fetch services[{}] from etcd failed", serviceId, e);
-        return Collections.emptyList();
+    @Override
+    public List<EtcdServer> getInitialListOfServers() {
+        return getServers();
     }
-  }
+
+    @Override
+    public List<EtcdServer> getUpdatedListOfServers() {
+        return getServers();
+    }
+
+    private List<EtcdServer> getServers() {
+        if (etcdClient == null) {
+            return Collections.emptyList();
+        }
+
+        try {
+            String prefix = properties.getPrefix() + "/" + serviceId;
+            GetOption option = GetOption.newBuilder()
+                    .withPrefix(fromString(prefix))
+                    .withKeysOnly(true)
+                    .build();
+
+            GetResponse response = etcdClient.getKVClient().get(fromString(prefix), option)
+                    .get();
+
+            return response.getKvs().stream()
+                    .map(KeyValue::getKey)
+                    .map(ByteSequence::toStringUtf8)
+                    .map(key -> {
+                        String address = key.replace(prefix, "").substring(1);
+                        String[] ipAndPort = address.split(":");
+                        return new EtcdServer(serviceId, ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.warn("Fetch services[{}] from etcd failed", serviceId, e);
+            return Collections.emptyList();
+        }
+    }
 
 }

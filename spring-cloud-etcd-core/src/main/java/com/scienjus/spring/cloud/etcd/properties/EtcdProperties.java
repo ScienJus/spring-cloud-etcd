@@ -17,5 +17,5 @@ import static java.util.Collections.singletonList;
 @ConfigurationProperties("spring.cloud.etcd")
 public class EtcdProperties {
 
-  private List<String> endpoints = new ArrayList<>(singletonList("http://127.0.0.1:2379"));
+    private List<String> endpoints = new ArrayList<>(singletonList("http://127.0.0.1:2379"));
 }

@@ -20,9 +20,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(EtcdDiscoveryProperties.class)
 public class EtcdDiscoveryClientConfiguration {
 
-  @Bean
-  public EtcdDiscoveryClient etcdDiscoveryClient(Client etcdClient, EtcdDiscoveryProperties properties) {
-    return new EtcdDiscoveryClient(etcdClient, properties);
-  }
+    @Bean
+    public EtcdDiscoveryClient etcdDiscoveryClient(Client etcdClient, EtcdDiscoveryProperties properties) {
+        return new EtcdDiscoveryClient(etcdClient, properties);
+    }
 
 }

@@ -18,19 +18,19 @@ import org.springframework.util.StringUtils;
 @AutoConfigureAfter(EtcdServiceRegistryAutoConfiguration.class)
 public class EtcdAutoSerivceRegistrationAutoConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean
-  public EtcdRegistration etcdAutoRegistration(InetUtils inetUtils, EtcdDiscoveryProperties properties) {
-    if (StringUtils.isEmpty(properties.getAddress())) {
-      String ipAddress = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
-      properties.setAddress(ipAddress);
+    @Bean
+    @ConditionalOnMissingBean
+    public EtcdRegistration etcdAutoRegistration(InetUtils inetUtils, EtcdDiscoveryProperties properties) {
+        if (StringUtils.isEmpty(properties.getAddress())) {
+            String ipAddress = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+            properties.setAddress(ipAddress);
+        }
+        return new EtcdRegistration(properties.getName(), properties.getAddress(), properties.getPort());
     }
-    return new EtcdRegistration(properties.getName(), properties.getAddress(), properties.getPort());
-  }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public EtcdAutoServiceRegistration etcdAutoServiceRegistration(EtcdServiceRegistry registry, EtcdRegistration etcdRegistration) {
-    return new EtcdAutoServiceRegistration(registry, etcdRegistration);
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public EtcdAutoServiceRegistration etcdAutoServiceRegistration(EtcdServiceRegistry registry, EtcdRegistration etcdRegistration) {
+        return new EtcdAutoServiceRegistration(registry, etcdRegistration);
+    }
 }

@@ -7,43 +7,43 @@ import java.util.Optional;
 
 public class EtcdAutoServiceRegistration extends AbstractAutoServiceRegistration<EtcdRegistration> {
 
-  private final EtcdRegistration registration;
+    private final EtcdRegistration registration;
 
-  protected EtcdAutoServiceRegistration(ServiceRegistry<EtcdRegistration> serviceRegistry, EtcdRegistration registration) {
-    super(serviceRegistry);
-    this.registration = registration;
-  }
+    protected EtcdAutoServiceRegistration(ServiceRegistry<EtcdRegistration> serviceRegistry, EtcdRegistration registration) {
+        super(serviceRegistry);
+        this.registration = registration;
+    }
 
-  @Override
-  protected EtcdRegistration getRegistration() {
-    return registration;
-  }
+    @Override
+    protected EtcdRegistration getRegistration() {
+        return registration;
+    }
 
-  @Override
-  protected EtcdRegistration getManagementRegistration() {
-    // TODO: management registration
-    return null;
-  }
+    @Override
+    protected EtcdRegistration getManagementRegistration() {
+        // TODO: management registration
+        return null;
+    }
 
-  @Override
-  protected int getConfiguredPort() {
-    return Optional.ofNullable(registration.getPort()).orElse(0);
-  }
+    @Override
+    protected int getConfiguredPort() {
+        return Optional.ofNullable(registration.getPort()).orElse(0);
+    }
 
-  @Override
-  protected void setConfiguredPort(int port) {
-    // do nothing
-    registration.setPort(port);
-  }
+    @Override
+    protected void setConfiguredPort(int port) {
+        // do nothing
+        registration.setPort(port);
+    }
 
-  @Override
-  protected Object getConfiguration() {
-    return null;
-  }
+    @Override
+    protected Object getConfiguration() {
+        return null;
+    }
 
-  @Override
-  protected boolean isEnabled() {
-    // TODO: enabled
-    return true;
-  }
+    @Override
+    protected boolean isEnabled() {
+        // TODO: enabled
+        return true;
+    }
 }

@@ -19,15 +19,15 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter(EtcdAutoConfiguration.class)
 public class EtcdServiceRegistryAutoConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean
-  public EtcdHeartbeatLease heartbeatLease(Client etcdClient, HeartbeatProperties properties) {
-    return new EtcdHeartbeatLease(etcdClient, properties);
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public EtcdHeartbeatLease heartbeatLease(Client etcdClient, HeartbeatProperties properties) {
+        return new EtcdHeartbeatLease(etcdClient, properties);
+    }
 
-  @Bean
-  @ConditionalOnMissingBean
-  public EtcdServiceRegistry etcdServiceRegistry(Client etcdClient, EtcdDiscoveryProperties properties, EtcdHeartbeatLease etcdHeartbeatLease) {
-    return new EtcdServiceRegistry(etcdClient, properties, etcdHeartbeatLease);
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public EtcdServiceRegistry etcdServiceRegistry(Client etcdClient, EtcdDiscoveryProperties properties, EtcdHeartbeatLease etcdHeartbeatLease) {
+        return new EtcdServiceRegistry(etcdClient, properties, etcdHeartbeatLease);
+    }
 }

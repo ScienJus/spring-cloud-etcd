@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EtcdRibbonClientConfiguration {
 
-  @Bean
-  @ConditionalOnMissingBean
-  public ServerList<?> ribbonServerList(IClientConfig config, Client etcdClient, EtcdDiscoveryProperties properties) {
-    return new EtcdServerList(etcdClient, properties, config.getClientName());
-  }
+    @Bean
+    @ConditionalOnMissingBean
+    public ServerList<?> ribbonServerList(IClientConfig config, Client etcdClient, EtcdDiscoveryProperties properties) {
+        return new EtcdServerList(etcdClient, properties, config.getClientName());
+    }
 }

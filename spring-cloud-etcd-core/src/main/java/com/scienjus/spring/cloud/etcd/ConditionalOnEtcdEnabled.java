@@ -22,16 +22,18 @@ import java.lang.annotation.Target;
 @Conditional(ConditionalOnEtcdEnabled.OnEtcdEnabledCondition.class)
 public @interface ConditionalOnEtcdEnabled {
 
-	class OnEtcdEnabledCondition extends AllNestedConditions {
+    class OnEtcdEnabledCondition extends AllNestedConditions {
 
-		public OnEtcdEnabledCondition() {
-			super(ConfigurationCondition.ConfigurationPhase.REGISTER_BEAN);
-		}
+        public OnEtcdEnabledCondition() {
+            super(ConfigurationCondition.ConfigurationPhase.REGISTER_BEAN);
+        }
 
-		@ConditionalOnProperty(value = "spring.cloud.etcd.enabled", matchIfMissing = true)
-		static class FoundProperty {}
+        @ConditionalOnProperty(value = "spring.cloud.etcd.enabled", matchIfMissing = true)
+        static class FoundProperty {
+        }
 
-		@ConditionalOnClass(Client.class)
-		static class FoundClass {}
-	}
+        @ConditionalOnClass(Client.class)
+        static class FoundClass {
+        }
+    }
 }

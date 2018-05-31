@@ -20,54 +20,54 @@ import java.util.stream.Collectors;
  */
 public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.EtcdStatus> {
 
-  private final Client etcdClient;
+    private final Client etcdClient;
 
-  public EtcdEndpoint(Client etcdClient) {
-    super("etcd", true, true);
-    this.etcdClient = etcdClient;
-  }
-
-  @Override
-  public EtcdStatus invoke() {
-    try {
-      List<EtcdMemberStatus> memberStatuses = etcdClient.getClusterClient().listMember()
-              .get().getMembers().stream()
-              .flatMap(member ->
-                      member.getClientURLS().stream()
-                              .map(url -> {
-                                try {
-                                  StatusResponse response = etcdClient.getMaintenanceClient().statusMember(url).get();
-                                  return new EtcdMemberStatus(member.getId(), member.getName(), url, response.getVersion());
-                                } catch (InterruptedException | ExecutionException e) {
-                                  throw new IllegalStateException(e);
-                                }
-                              })
-              ).collect(Collectors.toList());
-      return new EtcdStatus(memberStatuses);
-    } catch (InterruptedException | ExecutionException e) {
-      throw new EtcdOperationException(e);
+    public EtcdEndpoint(Client etcdClient) {
+        super("etcd", true, true);
+        this.etcdClient = etcdClient;
     }
-  }
 
-  @Data
-  @NoArgsConstructor
-  @AllArgsConstructor
-  static class EtcdStatus {
+    @Override
+    public EtcdStatus invoke() {
+        try {
+            List<EtcdMemberStatus> memberStatuses = etcdClient.getClusterClient().listMember()
+                    .get().getMembers().stream()
+                    .flatMap(member ->
+                            member.getClientURLS().stream()
+                                    .map(url -> {
+                                        try {
+                                            StatusResponse response = etcdClient.getMaintenanceClient().statusMember(url).get();
+                                            return new EtcdMemberStatus(member.getId(), member.getName(), url, response.getVersion());
+                                        } catch (InterruptedException | ExecutionException e) {
+                                            throw new IllegalStateException(e);
+                                        }
+                                    })
+                    ).collect(Collectors.toList());
+            return new EtcdStatus(memberStatuses);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new EtcdOperationException(e);
+        }
+    }
 
-    private List<EtcdMemberStatus> members;
-  }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class EtcdStatus {
 
-  @Data
-  @NoArgsConstructor
-  @AllArgsConstructor
-  static class EtcdMemberStatus {
+        private List<EtcdMemberStatus> members;
+    }
 
-    private long id;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class EtcdMemberStatus {
 
-    private String name;
+        private long id;
 
-    private String url;
+        private String name;
 
-    private String version;
-  }
+        private String url;
+
+        private String version;
+    }
 }

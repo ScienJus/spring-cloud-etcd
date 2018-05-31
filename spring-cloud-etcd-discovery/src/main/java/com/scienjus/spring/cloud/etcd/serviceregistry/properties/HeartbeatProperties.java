@@ -12,5 +12,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("spring.cloud.etcd.discovery.heartbeat")
 public class HeartbeatProperties {
 
-  private int interval = 30;
+    private int interval = 30;
 }

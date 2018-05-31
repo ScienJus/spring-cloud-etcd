@@ -8,23 +8,23 @@ import org.springframework.cloud.client.serviceregistry.Registration;
 @AllArgsConstructor
 public class EtcdRegistration implements Registration {
 
-  private String serviceName;
+    private String serviceName;
 
-  private String address;
+    private String address;
 
-  private Integer port;
+    private Integer port;
 
-  @Override
-  public String getServiceId() {
-    return serviceName;
-  }
+    @Override
+    public String getServiceId() {
+        return serviceName;
+    }
 
-  public String etcdKey(String prefix) {
-    return String.format("%s/%s/%s:%d",
-            prefix,
-            this.getServiceName(),
-            this.getAddress(),
-            this.getPort());
-  }
+    public String etcdKey(String prefix) {
+        return String.format("%s/%s/%s:%d",
+                prefix,
+                this.getServiceName(),
+                this.getAddress(),
+                this.getPort());
+    }
 
 }

@@ -13,12 +13,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("spring.cloud.etcd.discovery")
 public class EtcdDiscoveryProperties {
 
-  private String prefix = "/services";
+    private String prefix = "/services";
 
-  @Value("${spring.application.name:application}")
-  private String name;
+    @Value("${spring.application.name:application}")
+    private String name;
 
-  private String address;
+    private String address;
 
-  private Integer port;
+    private Integer port;
 }

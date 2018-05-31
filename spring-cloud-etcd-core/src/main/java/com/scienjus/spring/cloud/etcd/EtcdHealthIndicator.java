@@ -14,12 +14,12 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 @AllArgsConstructor
 public class EtcdHealthIndicator extends AbstractHealthIndicator {
 
-	private final Client etcdClient;
+    private final Client etcdClient;
 
-	@Override
-	protected void doHealthCheck(Health.Builder builder) throws Exception {
-		// todo: how to check cluster health using v3 api, /health or statusMember?
-		builder.up();
-	}
+    @Override
+    protected void doHealthCheck(Health.Builder builder) throws Exception {
+        // todo: how to check cluster health using v3 api, /health or statusMember?
+        builder.up();
+    }
 
 }
