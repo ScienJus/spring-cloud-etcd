@@ -37,8 +37,8 @@ public class EtcdAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnEnabledEndpoint("etcd")
-        public EtcdEndpoint etcdEndpoint(Client etcdClient) {
-            return new EtcdEndpoint(etcdClient);
+        public EtcdEndpoint etcdEndpoint(Client etcdClient, EtcdProperties properties) {
+            return new EtcdEndpoint(etcdClient, properties);
         }
 
         @Bean

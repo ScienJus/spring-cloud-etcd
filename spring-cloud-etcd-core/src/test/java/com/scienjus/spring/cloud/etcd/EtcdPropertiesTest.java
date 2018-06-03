@@ -1,10 +1,12 @@
 package com.scienjus.spring.cloud.etcd;
 
 import com.scienjus.spring.cloud.etcd.properties.EtcdProperties;
+import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
@@ -14,13 +16,14 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.boot.test.util.EnvironmentTestUtils.addEnvironment;
 
 public class EtcdPropertiesTest {
 
     private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-    static Stream<Arguments> etcdEndpoints() {
+    private static Stream<Arguments> etcdEndpoints() {
         return Stream.of(
                 Arguments.of(
                         emptyList(),
@@ -44,6 +47,14 @@ public class EtcdPropertiesTest {
         this.context.refresh();
         EtcdProperties etcdProperties = this.context.getBean(EtcdProperties.class);
         assertEquals(etcdProperties.getEndpoints(), actualEndpoints);
+    }
+
+    @Test
+    public void testEtcdDisabled() {
+        addEnvironment(this.context, "spring.cloud.etcd.enabled=false");
+        this.context.register(EtcdAutoConfiguration.class);
+        this.context.refresh();
+        assertThrows(NoSuchBeanDefinitionException.class, () -> this.context.getBean(EtcdProperties.class));
     }
 
     @AfterEach

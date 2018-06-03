@@ -2,7 +2,7 @@ package com.scienjus.spring.cloud.etcd;
 
 import com.coreos.jetcd.Client;
 import com.coreos.jetcd.maintenance.StatusResponse;
-import com.scienjus.spring.cloud.etcd.exception.EtcdOperationException;
+import com.scienjus.spring.cloud.etcd.properties.EtcdProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,31 +22,28 @@ public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.EtcdStatus> {
 
     private final Client etcdClient;
 
-    public EtcdEndpoint(Client etcdClient) {
+    private final EtcdProperties etcdProperties;
+
+    public EtcdEndpoint(Client etcdClient, EtcdProperties etcdProperties) {
         super("etcd", true, true);
         this.etcdClient = etcdClient;
+        this.etcdProperties = etcdProperties;
     }
 
     @Override
     public EtcdStatus invoke() {
-        try {
-            List<EtcdMemberStatus> memberStatuses = etcdClient.getClusterClient().listMember()
-                    .get().getMembers().stream()
-                    .flatMap(member ->
-                            member.getClientURLS().stream()
-                                    .map(url -> {
-                                        try {
-                                            StatusResponse response = etcdClient.getMaintenanceClient().statusMember(url).get();
-                                            return new EtcdMemberStatus(member.getId(), member.getName(), url, response.getVersion());
-                                        } catch (InterruptedException | ExecutionException e) {
-                                            throw new IllegalStateException(e);
-                                        }
-                                    })
-                    ).collect(Collectors.toList());
-            return new EtcdStatus(memberStatuses);
-        } catch (InterruptedException | ExecutionException e) {
-            throw new EtcdOperationException(e);
-        }
+        List<EtcdMemberStatus> memberStatuses = etcdProperties.getEndpoints()
+                .stream()
+                .map(endpoint -> {
+                    try {
+                        StatusResponse response = etcdClient.getMaintenanceClient().statusMember(endpoint).get();
+                        return new EtcdMemberStatus(endpoint, response.getVersion());
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new IllegalStateException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+        return new EtcdStatus(memberStatuses);
     }
 
     @Data
@@ -62,11 +59,7 @@ public class EtcdEndpoint extends AbstractEndpoint<EtcdEndpoint.EtcdStatus> {
     @AllArgsConstructor
     static class EtcdMemberStatus {
 
-        private long id;
-
-        private String name;
-
-        private String url;
+        private String endpoint;
 
         private String version;
     }
