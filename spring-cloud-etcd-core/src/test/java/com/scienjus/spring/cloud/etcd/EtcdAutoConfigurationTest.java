@@ -5,13 +5,13 @@ import com.coreos.jetcd.KV;
 import com.coreos.jetcd.data.ByteSequence;
 import com.coreos.jetcd.data.KeyValue;
 import com.coreos.jetcd.kv.GetResponse;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.util.EnvironmentTestUtils.addEnvironment;
 
 public class EtcdAutoConfigurationTest {
@@ -42,7 +42,7 @@ public class EtcdAutoConfigurationTest {
         }
     }
 
-    @After
+    @AfterEach
     public void closeContext() {
         this.context.close();
     }

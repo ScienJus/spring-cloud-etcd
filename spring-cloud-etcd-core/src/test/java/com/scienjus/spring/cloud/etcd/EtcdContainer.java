@@ -2,10 +2,8 @@ package com.scienjus.spring.cloud.etcd;
 
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.output.OutputFrame;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
-
-import java.util.function.Consumer;
 
 @Slf4j
 public class EtcdContainer implements AutoCloseable {
@@ -24,7 +22,7 @@ public class EtcdContainer implements AutoCloseable {
                         "--name", "node1",
                         "--advertise-client-urls", "http://0.0.0.0:2379",
                         "--listen-client-urls", "http://0.0.0.0:2379")
-                .withLogConsumer(logConsumer())
+                .withLogConsumer(new Slf4jLogConsumer(log))
                 .waitingFor(new LogMessageWaitStrategy().withRegEx(".*ready to serve client requests\n"));
     }
 
@@ -33,10 +31,6 @@ public class EtcdContainer implements AutoCloseable {
         final int port = container.getMappedPort(ETCD_CLIENT_PORT);
 
         return "http://" + host + ":" + port;
-    }
-
-    private Consumer<OutputFrame> logConsumer() {
-        return outputFrame -> log.info(outputFrame.getUtf8String());
     }
 
     public void start() {
