@@ -54,7 +54,6 @@ public class EtcdAutoConfigurationTest {
             EtcdEndpoint etcdEndpoint = this.context.getBean(EtcdEndpoint.class);
             EtcdEndpoint.EtcdStatus etcdStatus = etcdEndpoint.invoke();
 
-            System.out.println(etcdStatus);
             assertEquals(etcdStatus.getMembers().size(), 1);
             assertEquals(etcdStatus.getMembers().get(0).getEndpoint(), container.clientEndpoint());
         }

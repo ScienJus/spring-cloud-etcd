@@ -12,6 +12,7 @@
         <module>spring-cloud-etcd-core</module>
         <module>spring-cloud-etcd-discovery</module>
         <module>spring-cloud-etcd-example</module>
+        <module>spring-cloud-etcd-test-support</module>
     </modules>
 
     <properties>
@@ -46,6 +47,12 @@
             <dependency>
                 <groupId>com.scienjus</groupId>
                 <artifactId>spring-cloud-etcd-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.scienjus</groupId>
+                <artifactId>spring-cloud-etcd-test-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

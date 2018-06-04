@@ -43,5 +43,4 @@ public class EtcdContainer implements AutoCloseable {
             this.container.stop();
         }
     }
-
 }
