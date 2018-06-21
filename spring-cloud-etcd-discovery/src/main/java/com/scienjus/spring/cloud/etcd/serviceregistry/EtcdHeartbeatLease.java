@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public class EtcdHeartbeatLease {
+public class EtcdHeartbeatLease implements AutoCloseable {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -29,8 +29,8 @@ public class EtcdHeartbeatLease {
         if (leaseId == null) {
             synchronized (this) {
                 if (leaseId == null) {
-                    // init lease
                     try {
+                        // init lease
                         leaseId = etcdClient.getLeaseClient().grant(properties.getInterval()).get().getID();
                         log.info("Etcd init lease success. lease id: {}, hex: {}", leaseId, Long.toHexString(leaseId));
                         executor.execute(() -> {
@@ -48,7 +48,7 @@ public class EtcdHeartbeatLease {
         }
     }
 
-    public long getLeaseId() {
+    public Long getLeaseId() {
         initLease();
         return leaseId;
     }
@@ -59,5 +59,12 @@ public class EtcdHeartbeatLease {
         } catch (ExecutionException | InterruptedException e) {
             throw new EtcdOperationException(e);
         }
+    }
+
+
+    @Override
+    public void close() throws Exception {
+        revoke();
+        executor.shutdown();
     }
 }

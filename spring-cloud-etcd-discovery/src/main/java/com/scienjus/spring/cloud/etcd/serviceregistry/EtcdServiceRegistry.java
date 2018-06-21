@@ -50,6 +50,7 @@ public class EtcdServiceRegistry implements ServiceRegistry<EtcdRegistration> {
             etcdClient.getKVClient()
                     .delete(fromString(etcdKey))
                     .get();
+            lease.revoke();
         } catch (InterruptedException | ExecutionException e) {
             throw new EtcdOperationException(e);
         }

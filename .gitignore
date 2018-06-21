@@ -25,3 +25,6 @@ target/
 
 **/*.iml
 .idea/
+
+# jenv
+.java-version
